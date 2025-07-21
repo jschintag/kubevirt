@@ -107,6 +107,8 @@ elif [[ $TARGET =~ wg-arm64 ]]; then
     export KUBEVIRT_PROVIDER=${TARGET/-wg-arm64}
 elif [[ $TARGET =~ sev ]]; then
     export KUBEVIRT_PROVIDER=${TARGET/-sev}
+elif [[ $TARGET =~ secure-execution ]]; then
+    export KUBEVIRT_PROVIDER=${TARGET/-secure-execution}
 else
   export KUBEVIRT_PROVIDER=${TARGET}
 fi
