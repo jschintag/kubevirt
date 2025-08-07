@@ -20,6 +20,8 @@
 package launchsecurity
 
 import (
+	"time"
+
 	"kubevirt.io/kubevirt/tests/console"
 	"kubevirt.io/kubevirt/tests/decorators"
 	"kubevirt.io/kubevirt/tests/framework/kubevirt"
@@ -74,7 +76,7 @@ var _ = Describe("[sig-compute]IBM Secure Execution", decorators.SecureExecution
 		})
 
 		It("Should launche a Secure Execution VM", func() {
-			output, err := console.RunCommandAndStoreOutput(vmi, "cat /sys/firmware/uv/prot_virt_guest", 30)
+			output, err := console.RunCommandAndStoreOutput(vmi, "cat /sys/firmware/uv/prot_virt_guest", time.Second*30)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(output).To(Equal("1\n"))
 		})
