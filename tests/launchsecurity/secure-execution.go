@@ -20,9 +20,12 @@
 package launchsecurity
 
 import (
+	"kubevirt.io/kubevirt/tests/console"
 	"kubevirt.io/kubevirt/tests/decorators"
 	"kubevirt.io/kubevirt/tests/framework/kubevirt"
 	"kubevirt.io/kubevirt/tests/libnode"
+	"kubevirt.io/kubevirt/tests/libvmifact"
+	"kubevirt.io/kubevirt/tests/libvmops"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -43,6 +46,33 @@ var _ = Describe("[sig-compute]IBM Secure Execution", decorators.SecureExecution
 				}
 			}
 			Expect(hasNodeWithSELabel).To(BeTrue())
+		})
+	})
+	Context("Ensure cluster can run Secure Execution VMs", decorators.SecureExecution, decorators.SigCompute, func() {
+		var vmi *kubevirtv1.VirtualMachineInstance
+		BeforeEach(func() {
+			vmi = libvmifact.NewFedora()
+			// Enabling launchsecurity here won't prevent starting non-SE VMs
+			vmi.Spec.Domain.LaunchSecurity = &kubevirtv1.LaunchSecurity{}
+
+			// TODO: Mount the hostkey here via ConfigMap
+
+			By("Launching a normal VM to convert it to Secure Execution")
+			vmi = libvmops.RunVMIAndExpectLaunch(vmi, 240)
+
+			// TODO: Convert VM to SE here
+
+			By("Expecting the VirtualMachineInstance console")
+			Expect(console.LoginToFedora(vmi)).To(Succeed())
+		})
+
+		It("Should schedule the VM on Secure Execution enabled nodes", func() {
+			// TODO: Check that the pod has the correct selector here
+		})
+		It("Should launche a Secure Execution VM", func() {
+			output, err := console.RunCommandAndStoreOutput(vmi, "cat /sys/firmware/uv/prot_virt_guest", 30)
+			Expect(err).ToNot(HaveOccurred())
+			Expect(output).To(Equal("1\n"))
 		})
 	})
 })
