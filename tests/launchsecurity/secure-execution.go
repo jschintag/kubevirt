@@ -24,6 +24,7 @@ import (
 	"kubevirt.io/kubevirt/tests/decorators"
 	"kubevirt.io/kubevirt/tests/framework/kubevirt"
 	"kubevirt.io/kubevirt/tests/libnode"
+	"kubevirt.io/kubevirt/tests/libpod"
 	"kubevirt.io/kubevirt/tests/libvmifact"
 	"kubevirt.io/kubevirt/tests/libvmops"
 
@@ -67,8 +68,11 @@ var _ = Describe("[sig-compute]IBM Secure Execution", decorators.SecureExecution
 		})
 
 		It("Should schedule the VM on Secure Execution enabled nodes", func() {
-			// TODO: Check that the pod has the correct selector here
+			pod, err := libpod.GetPodByVirtualMachineInstance(vmi, vmi.Namespace)
+			Expect(err).ToNot(HaveOccurred())
+			Expect(pod.Spec.NodeSelector).To(HaveKeyWithValue(kubevirtv1.SecureExecutionLabel, "true"))
 		})
+
 		It("Should launche a Secure Execution VM", func() {
 			output, err := console.RunCommandAndStoreOutput(vmi, "cat /sys/firmware/uv/prot_virt_guest", 30)
 			Expect(err).ToNot(HaveOccurred())
