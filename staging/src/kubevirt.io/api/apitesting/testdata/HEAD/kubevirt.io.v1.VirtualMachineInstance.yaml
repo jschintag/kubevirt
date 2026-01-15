@@ -180,6 +180,7 @@ spec:
         - namespacesValue
         topologyKey: topologyKeyValue
   architecture: architectureValue
+  customMessage: customMessageValue
   dnsConfig:
     nameservers:
     - nameserversValue

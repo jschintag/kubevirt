@@ -18962,6 +18962,10 @@
       "description": "Specifies the architecture of the vm guest you are attempting to run. Defaults to the compiled architecture of the KubeVirt components",
       "type": "string"
      },
+     "customMessage": {
+      "description": "New field only used in training excercise. Do not upstream.",
+      "type": "string"
+     },
      "dnsConfig": {
       "description": "Specifies the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS configuration based on DNSPolicy.",
       "$ref": "#/definitions/k8s.io.api.core.v1.PodDNSConfig"

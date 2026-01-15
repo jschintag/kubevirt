@@ -497,6 +497,23 @@ var _ = Describe("Validating VMICreate Admitter", func() {
 			Entry("when architecture is s390x", "s390x", "s390-ccw-virtio"),
 		)
 
+		DescribeTable("should allow valid customMessage", func(msg string) {
+			vmi.Spec.CustomMessage = msg
+			causes := ValidateVirtualMachineInstanceSpec(k8sfield.NewPath("fake"), &vmi.Spec, config)
+			Expect(causes).To(BeEmpty())
+		},
+			Entry("when customMessage is empty", ""),
+			Entry("when customMessage is foo", "foo"),
+			Entry("when customMessage is bar", "bar"),
+			Entry("when customMessage is foobar", "foobar"),
+		)
+
+		It("should reject invalid customMessage", func() {
+			vmi.Spec.CustomMessage = "invalid"
+			causes := ValidateVirtualMachineInstanceSpec(k8sfield.NewPath("fake"), &vmi.Spec, config)
+			Expect(causes).To(Not(BeEmpty()))
+		})
+
 		DescribeTable("should reject invalid machine type", func(arch string, machineType string) {
 			vmi.Spec.Architecture = arch
 			vmi.Spec.Domain.Machine = &v1.Machine{Type: machineType}

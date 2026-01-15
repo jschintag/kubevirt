@@ -237,7 +237,22 @@ func ValidateVirtualMachineInstanceSpec(field *k8sfield.Path, spec *v1.VirtualMa
 	causes = append(causes, validateVideoConfig(field, spec, config)...)
 	causes = append(causes, validatePanicDevices(field, spec, config)...)
 
+	causes = append(causes, validateCustomMessage(field, spec)...)
+
 	return causes
+}
+
+func validateCustomMessage(field *k8sfield.Path, spec *v1.VirtualMachineInstanceSpec) (causes []metav1.StatusCause) {
+	if spec.CustomMessage != "" {
+		if !slices.Contains([]string{"foo", "bar", "foobar"}, spec.CustomMessage) {
+			return []metav1.StatusCause{{
+				Type:    metav1.CauseTypeFieldValueInvalid,
+				Message: "customMessage can only be foo, bar or foobar",
+				Field:   field.Child("customMessage").String(),
+			}}
+		}
+	}
+	return nil
 }
 
 func validateFilesystemsWithVirtIOFSEnabled(field *k8sfield.Path, spec *v1.VirtualMachineInstanceSpec, config *virtconfig.ClusterConfig) (causes []metav1.StatusCause) {

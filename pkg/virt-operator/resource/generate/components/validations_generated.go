@@ -5837,6 +5837,9 @@ var CRDsValidation map[string]string = map[string]string{
                     attempting to run. Defaults to the compiled architecture of the
                     KubeVirt components
                   type: string
+                customMessage:
+                  description: New field only used in training excercise. Do not upstream.
+                  type: string
                 dnsConfig:
                   description: |-
                     Specifies the DNS parameters of a pod.
@@ -11603,6 +11606,9 @@ var CRDsValidation map[string]string = map[string]string{
         architecture:
           description: Specifies the architecture of the vm guest you are attempting
             to run. Defaults to the compiled architecture of the KubeVirt components
+          type: string
+        customMessage:
+          description: New field only used in training excercise. Do not upstream.
           type: string
         dnsConfig:
           description: |-
@@ -17880,6 +17886,9 @@ var CRDsValidation map[string]string = map[string]string{
                     attempting to run. Defaults to the compiled architecture of the
                     KubeVirt components
                   type: string
+                customMessage:
+                  description: New field only used in training excercise. Do not upstream.
+                  type: string
                 dnsConfig:
                   description: |-
                     Specifies the DNS parameters of a pod.
@@ -22859,6 +22868,10 @@ var CRDsValidation map[string]string = map[string]string{
                           description: Specifies the architecture of the vm guest
                             you are attempting to run. Defaults to the compiled architecture
                             of the KubeVirt components
+                          type: string
+                        customMessage:
+                          description: New field only used in training excercise.
+                            Do not upstream.
                           type: string
                         dnsConfig:
                           description: |-
@@ -28291,6 +28304,10 @@ var CRDsValidation map[string]string = map[string]string{
                               description: Specifies the architecture of the vm guest
                                 you are attempting to run. Defaults to the compiled
                                 architecture of the KubeVirt components
+                              type: string
+                            customMessage:
+                              description: New field only used in training excercise.
+                                Do not upstream.
                               type: string
                             dnsConfig:
                               description: |-

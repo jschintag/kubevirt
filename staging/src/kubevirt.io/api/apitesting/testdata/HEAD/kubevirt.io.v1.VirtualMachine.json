@@ -454,6 +454,7 @@
             "tdx": {}
           }
         },
+        "customMessage": "customMessageValue",
         "nodeSelector": {
           "nodeSelectorKey": "nodeSelectorValue"
         },

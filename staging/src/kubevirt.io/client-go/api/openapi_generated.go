@@ -28537,6 +28537,13 @@ func schema_kubevirtio_api_core_v1_VirtualMachineInstanceSpec(ref common.Referen
 							Ref:         ref("kubevirt.io/api/core/v1.DomainSpec"),
 						},
 					},
+					"customMessage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "New field only used in training excercise. Do not upstream.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
 							Description: "NodeSelector is a selector which must be true for the vmi to fit on a node. Selector which must match a node's labels for the vmi to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
