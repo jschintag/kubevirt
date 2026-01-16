@@ -103,6 +103,12 @@ func (nsr *NodeSelectorRenderer) isManualTSCFrequencyRequired() bool {
 	return nsr.tscFrequency != nil
 }
 
+func WithCustomMessageSelector(msg string) NodeSelectorRendererOption {
+	return func(renderer *NodeSelectorRenderer) {
+		renderer.enableSelectorLabel("kubevirt.io/" + msg)
+	}
+}
+
 func WithRealtime() NodeSelectorRendererOption {
 	return func(renderer *NodeSelectorRenderer) {
 		renderer.realtimeEnabled = true

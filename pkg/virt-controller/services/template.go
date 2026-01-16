@@ -747,6 +747,11 @@ func (t *TemplateService) newNodeSelectorRenderer(vmi *v1.VirtualMachineInstance
 		opts = append(opts, WithSecureExecutionSelector())
 	}
 
+	if vmi.Spec.CustomMessage != "" {
+		log.Log.V(4).Info("Add customMessage node label selector")
+		opts = append(opts, WithCustomMessageSelector(vmi.Spec.CustomMessage))
+	}
+
 	if util.IsTDXVMI(vmi) {
 		log.Log.V(4).Info("Add TDX node label selector")
 		opts = append(opts, WithTDXSelector())
