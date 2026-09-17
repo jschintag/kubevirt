@@ -241,6 +241,7 @@ func ValidateVirtualMachineInstanceSpec(field *k8sfield.Path, spec *v1.VirtualMa
 	causes = append(causes, validateRebootPolicy(field, spec, config)...)
 	causes = append(causes, validateReservedOverheadMemlock(field, spec, config)...)
 	causes = append(causes, validateServiceAccountName(field, spec)...)
+	causes = append(causes, validateEmulationPolicy(field, spec, config)...)
 
 	return causes
 }
@@ -2180,5 +2181,33 @@ func validateServiceAccountName(field *k8sfield.Path, spec *v1.VirtualMachineIns
 		}
 	}
 
+	return causes
+}
+
+func validateEmulationPolicy(field *k8sfield.Path, spec *v1.VirtualMachineInstanceSpec, config *virtconfig.ClusterConfig) []metav1.StatusCause {
+	var causes []metav1.StatusCause
+
+	if spec.EmulationPolicy == nil {
+		return causes
+	}
+
+	if !config.CrossArchitectureVirtualizationEnabled() {
+		causes = append(causes, metav1.StatusCause{
+			Type:    metav1.CauseTypeFieldValueInvalid,
+			Message: fmt.Sprintf("EmulationPolicy is specified but the %s feature gate is not enabled", featuregate.CrossArchitectureVirtualization),
+			Field:   field.Child("emulationPolicy").String(),
+		})
+		return causes
+	}
+
+	values := []v1.EmulationPolicy{v1.EmulationPolicyNone, v1.EmulationPolicySoftware}
+
+	if !slices.Contains(values, *spec.EmulationPolicy) {
+		causes = append(causes, metav1.StatusCause{
+			Type:    metav1.CauseTypeFieldValueInvalid,
+			Message: fmt.Sprintf("Unknown EmulationPolicy '%s', allowed values are %v", *spec.EmulationPolicy, values),
+			Field:   field.Child("emulationPolicy").String(),
+		})
+	}
 	return causes
 }

@@ -428,7 +428,8 @@
           }
         }
       },
-      "roleAggregationStrategy": "roleAggregationStrategyValue"
+      "roleAggregationStrategy": "roleAggregationStrategyValue",
+      "emulationPolicy": "emulationPolicyValue"
     },
     "infra": {
       "nodePlacement": {

@@ -546,3 +546,7 @@ func (c *ClusterConfig) PersistentReservationEnabled() bool {
 
 	return slices.Contains(c.GetConfig().DeveloperConfiguration.FeatureGates, featuregate.PersistentReservation)
 }
+
+func (c *ClusterConfig) GetEmulationPolicy() *v1.EmulationPolicy {
+	return c.GetConfig().EmulationPolicy
+}
