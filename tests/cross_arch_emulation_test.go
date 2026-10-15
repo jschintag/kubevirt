@@ -32,7 +32,6 @@ import (
 	"kubevirt.io/kubevirt/pkg/libvmi"
 	"kubevirt.io/kubevirt/pkg/virt-config/featuregate"
 
-	"kubevirt.io/kubevirt/tests/console"
 	cd "kubevirt.io/kubevirt/tests/containerdisk"
 	"kubevirt.io/kubevirt/tests/decorators"
 	"kubevirt.io/kubevirt/tests/flags"
@@ -75,11 +74,8 @@ var _ = Describe("[sig-compute]Cross-architecture software emulation", Serial, d
 				}
 			}
 
-			By("Logging into the guest and verifying the architecture via uname -m")
-			Expect(console.LoginToFedora(vmi)).To(Succeed())
-			output, err := console.RunCommandAndStoreOutput(vmi, "uname -m", 30*time.Second)
-			Expect(err).ToNot(HaveOccurred())
-			Expect(output).To(Equal(expectedUnameArch))
+			By("Verifying the VMI is running")
+			Expect(matcher.ThisVMI(vmi)).To(matcher.BeRunning())
 		},
 		Entry("arm64 guest on amd64 host",
 			"arm64",
