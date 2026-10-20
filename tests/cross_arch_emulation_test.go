@@ -140,4 +140,35 @@ var _ = Describe("[sig-compute]Cross-architecture software emulation", Serial, d
 			decorators.RequiresARM64,
 		),
 	)
+
+	DescribeTable("should keep a cross-architecture guest pending when emulation is not allowed",
+		func(guestArch string) {
+			vmi := libvmi.New(
+				libvmi.WithArchitecture(guestArch),
+				libvmi.WithContainerDisk("disk0", cd.ContainerDiskFor(cd.ContainerDiskFedoraTestTooling)),
+				libvmi.WithMemoryRequest("1Gi"),
+				libvmi.WithRng(),
+			)
+			vmi.Spec.EmulationPolicy = pointer.P(v1.EmulationPolicyNone)
+
+			By("Creating a VMI with " + guestArch + " architecture on a cross-architecture host")
+			vmi = libvmops.RunVMIAndExpectScheduling(vmi, flags.StartupTimeoutSecondsMedium())
+
+			By("Verifying the VMI becomes unschedulable")
+			Eventually(matcher.ThisVMI(vmi), 60*time.Second, 2*time.Second).Should(
+				matcher.HaveConditionFalseWithReason(k8sv1.PodScheduled, k8sv1.PodReasonUnschedulable),
+			)
+
+			By("Verifying the VMI stays pending")
+			Consistently(matcher.ThisVMI(vmi), 30*time.Second, 5*time.Second).Should(matcher.BeInPhase(v1.Scheduling))
+		},
+		Entry("arm64 guest on amd64 host",
+			"arm64",
+			decorators.RequiresAMD64,
+		),
+		Entry("amd64 guest on arm64 host",
+			"amd64",
+			decorators.RequiresARM64,
+		),
+	)
 })
