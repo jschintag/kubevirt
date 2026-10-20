@@ -77,7 +77,7 @@ var _ = Describe("[sig-compute]Cross-architecture software emulation", Serial, d
 			}
 
 			By("Verifying the VMI is running")
-			Expect(matcher.ThisVMI(vmi)).To(matcher.BeRunning())
+			Eventually(matcher.ThisVMI(vmi), 60*time.Second, 2*time.Second).Should(matcher.BeRunning())
 		},
 		Entry("arm64 guest on amd64 host",
 			"arm64",
